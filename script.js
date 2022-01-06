@@ -13,7 +13,7 @@ class Scene {
         this.backgroundY = 0;
         this.backgroundSpeed = 1;
     }
-    animateBackGround() {
+    animateBackground() {
         this.backgroundImage = new Image();
         this.backgroundImage.src = 'https://i.pinimg.com/originals/8d/bb/58/8dbb588536397d8571c934332ff1dffc.jpg';
         this.backgroundY += this.backgroundSpeed;
@@ -39,6 +39,8 @@ class Bug {
         this.id = index;
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
+        this.image = new Image();
+        this.image.src = 'https://media.giphy.com/media/Qr8JE9Hvi7ave/200.gif';
     }
     draw() {
         this.x += Math.random() * 10 - 5;
@@ -47,9 +49,7 @@ class Bug {
         if (distance(this, player) < BUG_SIZE) {
             return remove(this.id);
         }
-        const ghost = new Image();
-        ghost.src = 'https://media.giphy.com/media/Qr8JE9Hvi7ave/200.gif';
-        scene.ctx.drawImage(ghost, this.x, this.y, BUG_SIZE, BUG_SIZE)
+        scene.ctx.drawImage(this.image, this.x, this.y, BUG_SIZE, BUG_SIZE)
 
         if (this.x > canvas.width) {
             this.x = - BUG_SIZE;
@@ -73,11 +73,11 @@ class Hero {
         this.speedX = 0;
         this.speedY = 0;
         this.actions = 0;
+        this.image = new Image();
+        this.image.src = 'https://media.giphy.com/media/xThtaaGyhb0kZ052A8/giphy.gif';
     }
     draw() {
-        const burger = new Image();
-        burger.src = 'https://media.giphy.com/media/xThtaaGyhb0kZ052A8/giphy.gif'
-        scene.ctx.drawImage(burger, this.x, this.y, PLAYER_SIZE, PLAYER_SIZE)
+        scene.ctx.drawImage(this.image, this.x, this.y, PLAYER_SIZE, PLAYER_SIZE)
 
         this.x += this.speedX;
         this.y += this.speedY;
@@ -145,7 +145,7 @@ document.addEventListener('keydown', (e) => {
 
 function update() {
     scene.clear();
-    scene.animateBackGround();
+    scene.animateBackground();
     bugs.forEach(bug => bug.draw())
     player.draw();
     scene.score();
