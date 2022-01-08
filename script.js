@@ -1,8 +1,9 @@
 const PLAYER_SPEED = 4;
 const PLAYER_SIZE = 50;
-const N_BUGS = 5;
+const N_GHOST = 5;
 const BUG_SIZE = 30;
 
+let startGame = false;
 
 class Scene {
     constructor() {
@@ -27,14 +28,14 @@ class Scene {
     score() {
         this.ctx.fillStyle = 'white';
         this.ctx.font = '50px monospace';
-        this.ctx.fillText(`👻 ${bugs.length}`, 50, 50);
+        this.ctx.fillText(`👻 ${ghosts.length}`, 50, 50);
         this.ctx.fillText(`🚀 ${player.actions}`, this.canvas.width - 150, 50);
     }
 }
 
 const distance = (a, b) => Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2);
 
-class Bug {
+class Ghost {
     constructor(index) {
         this.id = index;
         this.x = Math.random() * canvas.width;
@@ -118,15 +119,19 @@ const scene = new Scene();
 
 const player = new Hero();
 
-let bugs = new Array(N_BUGS).fill().map((_, index) => new Bug(index));
+let ghosts = new Array(N_GHOST).fill().map((_, index) => new Ghost(index));
 /*
     Array(3).fill(getObj()) will fill your array with references to the same object,
     Array(3).fill(null).map(getObj) will create object per element.
 */
 
-const remove = bugId => bugs = bugs.filter(bug => bug.id !== bugId)
+const remove = ghostId => ghosts = ghosts.filter(ghost => ghost.id !== ghostId)
 
 document.addEventListener('keydown', (e) => {
+    if (e.key === 's') {
+        startGame = true;
+        return;
+    }
     player.actions += 1;
     switch (e.key) {
         case 'ArrowLeft':
@@ -146,10 +151,18 @@ document.addEventListener('keydown', (e) => {
 function update() {
     scene.clear();
     scene.animateBackground();
-    bugs.forEach(bug => bug.draw())
-    player.draw();
+    if (startGame) {
+        ghosts.forEach(ghost => ghost.draw())
+        player.draw();
+    } else {
+        scene.ctx.fillText(
+            'Press "s" to start the game !',
+            scene.canvas.width / 2 - 400,
+            scene.canvas.height / 2
+        );
+    }
     scene.score();
-    if (bugs.length) {
+    if (ghosts.length) {
         requestAnimationFrame(update)
     }
 }
